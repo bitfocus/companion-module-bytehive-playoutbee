@@ -1,12 +1,12 @@
 {
-  "name": "manufacturer-product",
+  "name": "bytehive-playoutbee",
   "version": "0.0.0-development",
-  "description": "description",
-  "manufacturer": "manufacturer",
+  "description": "PlayoutBee module for Companion",
+  "manufacturer": "ByteHive",
   "product": [
-    "product"
+    "PlayoutBee"
   ],
-  "shortname": "shortname",
+  "shortname": "playoutbee",
   "main": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -28,6 +28,6 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/estilles/companion-module-template-es6.git"
+    "url": "https://github.com/estilles/companion-module-bytehive-playoutbee.git"
   }
 }
