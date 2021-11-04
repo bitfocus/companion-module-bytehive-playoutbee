@@ -6,30 +6,26 @@ module.exports = {
 				id: 'info',
 				width: 12,
 				label: 'Information',
-				value: '[replace with module description]',
+				value: 'Companion Module for ByteHive PlayoutBee',
 			},
-			/**
-			 * replace with configuration fields for your module
-			 * see https://github.com/bitfocus/companion/wiki/Module-Configuration
-			 */
-			// {
-			// 	type: 'textinput',
-			// 	id: 'ip',
-			// 	label: 'Target IP',
-			// 	width: 6,
-			// 	regex: this.REGEX_IP,
-			// 	default: this.DEFAULT_IP,
-			// 	required: true,
-			// },
-			// {
-			// 	type: 'textinput',
-			// 	id: 'port',
-			// 	label: 'Target Port',
-			// 	width: 6,
-			// 	regex: this.REGEX_PORT,
-			// 	default: this.DEFAULT_PORT,
-			// 	required: true,
-			// },
+			{
+				type: 'textinput',
+				id: 'ip',
+				label: 'Device IP',
+				width: 6,
+				regex: this.REGEX_IP,
+				default: this.DEFAULT_IP,
+				required: true,
+			},
+			{
+				type: 'textinput',
+				id: 'port',
+				label: 'API Port',
+				width: 6,
+				regex: this.REGEX_PORT,
+				default: this.DEFAULT_PORT,
+				required: true,
+			},
 		]
 	},
 }
