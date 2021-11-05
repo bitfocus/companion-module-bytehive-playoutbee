@@ -26,6 +26,16 @@ module.exports = {
 				default: this.DEFAULT_PORT,
 				required: true,
 			},
+			{
+				type: 'number',
+				id: 'interval',
+				label: 'Interval in Milliseconds',
+				width: 6,
+				min: 100,
+				max: 1000,
+				default: 100,
+				required: true,
+			},
 		]
 	},
 }

@@ -6,8 +6,9 @@ const constants = require('./constants')
 const presets = require('./presets')
 const variables = require('./variables')
 const feedbacks = require('./feedbacks')
+const api = require('./api')
 
-class MixEffectInstance extends instance_skel {
+class PayoutBee extends instance_skel {
 	constructor(system, id, config) {
 		super(system, id, config)
 
@@ -18,38 +19,99 @@ class MixEffectInstance extends instance_skel {
 			...presets,
 			...variables,
 			...feedbacks,
+			...api,
 		})
 
 		this.config = config
 
-		// instance state store
-		this.state = {
-			someState: 'default state',
+		this.store = {
+			clipID: 0,
+			status: 'stopped',
+			timecode: '00:00:00:00',
+			remainingtimecode: 0,
+			preview: false,
+			clips: [],
+			loop: false,
+			interval: null,
 		}
+		this.initConstants()
 	}
 
-	init() {
-		this.initConstants()
-		this.initActions()
-		this.initPresets()
-		this.initFeedbacks()
-		this.initVariables()
+	async init() {
+		this.connectToPlayer()
+	}
 
-		this.status(this.STATUS_OK)
+	async connectToPlayer() {
+		this.status(this.STATUS_UNKNOWN, 'Conecting...')
+		if (await this.updateFromPlayer()) {
+			this.initActions()
+			this.initVariables()
+			this.initFeedbacks()
+			this.initPresets()
+
+			this.checkFeedbacks()
+
+			this.startQueue()
+			this.status(this.STATUS_OK)
+			return
+		}
+		this.status(this.STATUS_ERROR)
+		this.log('error', "init: Can't connect to player")
 	}
 
 	updateConfig(config) {
 		this.config = config
-
-		// reinitialize actions/presets/feedbacks if necessary
-		// this.initActions()
-		// this.initPresets()
-		// this.initFeedbacks()
-
-		this.status(this.STATUS_OK)
+		this.connectToPlayer()
 	}
 
-	destroy() {}
+	startQueue() {
+		let working = false
+
+		if (this.store.interval) {
+			this.log('warn', 'Attempting to start queue while already running')
+			return
+		}
+
+		this.store.interval = setInterval(async () => {
+			if (working) {
+				return
+			}
+			working = true
+			try {
+				const player = await this.getPlayer()
+				this.updateVariablesFromPlayer(player)
+			} catch (error) {
+				console.log(`${new Date()}: ${error}`)
+				this.status(this.STATUS_ERROR, error)
+				this.stopQueue()
+			}
+			working = false
+		}, this.config.interval)
+	}
+
+	async updateFromPlayer() {
+		try {
+			const player = await this.getPlayer()
+			this.updateVariablesFromPlayer(player)
+			return true
+		} catch (error) {
+			this.status(this.STATUS_ERROR, error)
+			this.stopQueue()
+		}
+		return false
+	}
+
+	stopQueue() {
+		if (this.store.interval) {
+			this.log('info', 'Stopping queue interval')
+			clearInterval(this.store.interval)
+			this.store.interval = null
+		}
+	}
+
+	destroy() {
+		this.stopQueue()
+	}
 }
 
-module.exports = MixEffectInstance
+module.exports = PayoutBee
