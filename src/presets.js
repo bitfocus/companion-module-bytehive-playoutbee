@@ -150,7 +150,6 @@ module.exports = {
 				actions: [],
 				feedbacks: [],
 			})
-	
 		})
 
 		timecodeParts.forEach((part) => {
@@ -172,7 +171,6 @@ module.exports = {
 				actions: [],
 				feedbacks: [],
 			})
-	
 		})
 
 		// Select Clips
@@ -201,7 +199,6 @@ module.exports = {
 					},
 				],
 			})
-	
 		}
 
 		this.setPresetDefinitions(presets)
