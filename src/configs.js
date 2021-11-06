@@ -18,12 +18,13 @@ module.exports = {
 				required: true,
 			},
 			{
-				type: 'textinput',
+				type: 'number',
 				id: 'port',
-				label: 'API Port',
+				label: 'PlayoutBee REST Port',
 				width: 6,
-				regex: this.REGEX_PORT,
-				default: this.DEFAULT_PORT,
+				min: 1024,
+				max: 65535 ,
+				default: 3000,
 				required: true,
 			},
 			{
