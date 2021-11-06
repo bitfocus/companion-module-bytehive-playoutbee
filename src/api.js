@@ -6,6 +6,11 @@ const generateUrl = (ip, port, cmd, param = '') => `http://${ip}:${port}/api/${c
 
 module.exports = {
 	sendCommand({ cmd, param, timeout = 2000 }) {
+		if (this.config.ip === undefined) {
+			console.log('Error: Missing IP Address in instance config')
+			return Promise.reject('Error: Missing IP Address in instance config')
+		}
+
 		const url = generateUrl(this.config.ip, this.config.port, cmd, param)
 
 		const method = GET.includes(cmd) ? 'get' : POST.includes(cmd) ? 'post' : 'head'
