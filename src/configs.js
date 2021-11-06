@@ -23,7 +23,7 @@ module.exports = {
 				label: 'PlayoutBee REST Port',
 				width: 6,
 				min: 1024,
-				max: 65535 ,
+				max: 65535,
 				default: 3000,
 				required: true,
 			},
