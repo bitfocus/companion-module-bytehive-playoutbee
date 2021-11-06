@@ -1,3 +1,10 @@
+## [1.0.2](https://github.com/estilles/companion-module-bytehive-playoutbee/compare/v1.0.1...v1.0.2) (2021-11-06)
+
+
+### Bug Fixes
+
+* change background color of select clip preset to red ([26854cf](https://github.com/estilles/companion-module-bytehive-playoutbee/commit/26854cf432dfd6cd220b4e7b052c113e3fe6e539))
+
 ## [1.0.1](https://github.com/estilles/companion-module-bytehive-playoutbee/compare/v1.0.0...v1.0.1) (2021-11-06)
 
 
