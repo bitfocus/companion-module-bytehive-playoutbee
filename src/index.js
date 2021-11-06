@@ -87,6 +87,8 @@ class PayoutBee extends instance_skel {
 			}
 			working = false
 		}, this.config.interval)
+
+		this.log('debug', 'Started queue interval')
 	}
 
 	async updateFromPlayer() {
@@ -103,9 +105,9 @@ class PayoutBee extends instance_skel {
 
 	stopQueue() {
 		if (this.store.interval) {
-			this.log('info', 'Stopping queue interval')
 			clearInterval(this.store.interval)
 			this.store.interval = null
+			this.log('debug', 'Stopped queue interval')
 		}
 	}
 
