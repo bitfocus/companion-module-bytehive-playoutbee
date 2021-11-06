@@ -41,7 +41,17 @@ class PayoutBee extends instance_skel {
 		this.connectToPlayer()
 	}
 
+	updateConfig(config) {
+		this.config = config
+		this.stopQueue()
+		this.connectToPlayer()
+	}
+
 	async connectToPlayer() {
+		if (this.config.ip === undefined) {
+			this.status(this.STATUS_UNKNOWN, 'Needs IP')
+			return
+		}
 		this.status(this.STATUS_UNKNOWN, 'Conecting...')
 		if (await this.updateFromPlayer()) {
 			this.initActions()
@@ -57,11 +67,6 @@ class PayoutBee extends instance_skel {
 		}
 		this.status(this.STATUS_ERROR)
 		this.log('error', "init: Can't connect to player")
-	}
-
-	updateConfig(config) {
-		this.config = config
-		this.connectToPlayer()
 	}
 
 	startQueue() {
