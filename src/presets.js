@@ -195,7 +195,7 @@ module.exports = {
 					{
 						type: 'clip',
 						options: { clip: index },
-						style: { color: 16777215, bgcolor: 32768 },
+						style: { color: 16777215, bgcolor: 16711680 },
 					},
 				],
 			})
