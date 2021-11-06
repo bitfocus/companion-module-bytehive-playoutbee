@@ -11,7 +11,7 @@ module.exports = {
 			{
 				type: 'textinput',
 				id: 'ip',
-				label: 'Device IP',
+				label: 'PlayoutBee IP',
 				width: 6,
 				regex: this.REGEX_IP,
 				default: this.DEFAULT_IP,
