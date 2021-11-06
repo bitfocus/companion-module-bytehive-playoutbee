@@ -1,3 +1,11 @@
+## [1.0.1](https://github.com/estilles/companion-module-bytehive-playoutbee/compare/v1.0.0...v1.0.1) (2021-11-06)
+
+
+### Bug Fixes
+
+* add checks for missing ip ([f7b7da3](https://github.com/estilles/companion-module-bytehive-playoutbee/commit/f7b7da3e258c92a6d392a7ad12fc31a5aa76da75))
+* **api:** add missing config check ([f00d85d](https://github.com/estilles/companion-module-bytehive-playoutbee/commit/f00d85d8825a4aa24ca438488e855836be915915))
+
 # 1.0.0 (2021-11-05)
 
 
