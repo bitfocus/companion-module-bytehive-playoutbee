@@ -30,7 +30,7 @@ module.exports = {
 			{
 				type: 'number',
 				id: 'interval',
-				label: 'Interval in Milliseconds',
+				label: 'Polling Interval in Milliseconds',
 				width: 6,
 				min: 100,
 				max: 1000,
