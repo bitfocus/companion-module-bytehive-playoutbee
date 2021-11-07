@@ -20,7 +20,7 @@ module.exports = {
 					type: 'dropdown',
 					label: 'Clip',
 					id: 'clip',
-					choices: this.store.clips.map(({ name }, index) => ({ id: index, label: `${index}: ${name}` })),
+					choices: this.store.clips.map(({ name }, index) => ({ id: index + 1, label: `${index + 1}: ${name}` })),
 					default: 0,
 				},
 			],
