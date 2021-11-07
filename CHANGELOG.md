@@ -1,3 +1,14 @@
+## [1.0.3](https://github.com/estilles/companion-module-bytehive-playoutbee/compare/v1.0.2...v1.0.3) (2021-11-07)
+
+
+### Bug Fixes
+
+* **actions:** correct clip index displayed on 'Select Clip' action ([2d9e2d5](https://github.com/estilles/companion-module-bytehive-playoutbee/commit/2d9e2d5cae29f3e75df653ad2a0c92f6431a0af4))
+* **config:** set port config to only accept 3000 ([f07e489](https://github.com/estilles/companion-module-bytehive-playoutbee/commit/f07e489ff7a619866d1a1449cfa4fea6e6d8afe6))
+* **config:** update interval config option description ([fe09a39](https://github.com/estilles/companion-module-bytehive-playoutbee/commit/fe09a3993a84275645241f7f4a69d7d744c3d108))
+* **feedbacks:** correct clip index displayed on 'Current Clip' feedback ([1c15d28](https://github.com/estilles/companion-module-bytehive-playoutbee/commit/1c15d2834d801b3247c77167d920a8dcb83baec2))
+* **variables:** correct value of  vabiable ([b64456a](https://github.com/estilles/companion-module-bytehive-playoutbee/commit/b64456a73f09e4919aa5a9bbf4b1e6cffbb38c30))
+
 ## [1.0.2](https://github.com/estilles/companion-module-bytehive-playoutbee/compare/v1.0.1...v1.0.2) (2021-11-06)
 
 
