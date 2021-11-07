@@ -6,7 +6,7 @@ module.exports = {
 			storeId: 'clipID',
 			feedbacks: ['clip'],
 			updateMore: ({ value, context }) => {
-				return [{ name: 'clip_name', value: context.store.clips[value]?.name }]
+				return [{ name: 'clip_name', value: context.store.clips[value - 1]?.name }]
 			},
 		},
 		{
