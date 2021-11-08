@@ -28,7 +28,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/estilles/companion-module-bytehive-playoutbee.git"
+    "url": "https://github.com/bitfocus/companion-module-bytehive-playoutbee.git"
   },
   "dependencies": {
     "needle": "^3.0.0"
