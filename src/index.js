@@ -35,6 +35,13 @@ class PayoutBee extends instance_skel {
 			interval: null,
 		}
 		this.initConstants()
+
+		this.customVariables = {}
+		this.customVariableUpdate()
+		system.on('custom_variables_update', (variables) => {
+			this.customVariableUpdate(variables)
+			this.initActions()
+		})
 	}
 
 	async init() {
@@ -113,6 +120,16 @@ class PayoutBee extends instance_skel {
 			clearInterval(this.store.interval)
 			this.store.interval = null
 			this.log('debug', 'Stopped queue interval')
+		}
+	}
+
+	customVariableUpdate(variables) {
+		if (variables) {
+			this.customVariables = variables
+		} else {
+			this.system.emit('custom_variables_get', (variables) => {
+				this.customVariables = variables
+			})
 		}
 	}
 
