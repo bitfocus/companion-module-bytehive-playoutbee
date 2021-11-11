@@ -59,7 +59,7 @@ class PayoutBee extends instance_skel {
 			this.status(this.STATUS_UNKNOWN, 'Needs IP')
 			return
 		}
-		this.status(this.STATUS_UNKNOWN, 'Conecting...')
+		this.status(this.STATUS_UNKNOWN, 'Connecting...')
 		if (await this.updateFromPlayer()) {
 			this.initActions()
 			this.initVariables()
