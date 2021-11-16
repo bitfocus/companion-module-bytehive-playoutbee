@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/bitfocus/companion-module-bytehive-playoutbee/compare/v1.0.0...v1.0.1) (2021-11-16)
+
+
+### Bug Fixes
+
+* **instance:** implement better error detection/recovery ([1fd1a35](https://github.com/bitfocus/companion-module-bytehive-playoutbee/commit/1fd1a3566ec418291cd14b4a70953537c7daa1a9))
+
 # 1.0.0 (2021-11-11)
 
 
