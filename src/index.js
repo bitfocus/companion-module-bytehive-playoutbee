@@ -1,3 +1,5 @@
+const { Mutex, E_CANCELED } = require('async-mutex')
+
 const instance_skel = require('../../../instance_skel')
 
 const configs = require('./configs')
@@ -24,6 +26,8 @@ class PayoutBee extends instance_skel {
 
 		this.config = config
 
+		this.updatingState = new Mutex()
+
 		this.store = {
 			clipID: 0,
 			status: 'stopped',
@@ -44,7 +48,7 @@ class PayoutBee extends instance_skel {
 		})
 	}
 
-	async init() {
+	init() {
 		this.connectToPlayer()
 	}
 
@@ -60,59 +64,61 @@ class PayoutBee extends instance_skel {
 			return
 		}
 		this.status(this.STATUS_UNKNOWN, 'Connecting...')
-		if (await this.updateFromPlayer()) {
-			this.initActions()
-			this.initVariables()
-			this.initFeedbacks()
-			this.initPresets()
 
-			this.checkFeedbacks()
-
-			this.startQueue()
-			this.status(this.STATUS_OK)
+		try {
+			await this.updateFromPlayer()
+		} catch (error) {
+			this.log('error', error)
+			this.log('error', `Unable to establish connection to player via ${this.config.ip}`)
+			this.status(this.STATUS_ERROR)
 			return
 		}
-		this.status(this.STATUS_ERROR)
-		this.log('error', "init: Can't connect to player")
+
+		this.initActions()
+		this.initVariables()
+		this.initFeedbacks()
+		this.initPresets()
+
+		this.checkFeedbacks()
+
+		this.startQueue()
+		this.status(this.STATUS_OK)
 	}
 
 	startQueue() {
-		let working = false
+		let errorCount = 0
 
 		if (this.store.interval) {
-			this.log('warn', 'Attempting to start queue while already running')
+			this.log('warn', 'Attempting to start queue while another already running')
 			return
 		}
 
 		this.store.interval = setInterval(async () => {
-			if (working) {
-				return
-			}
-			working = true
-			try {
-				const player = await this.getPlayer()
-				this.updateVariablesFromPlayer(player)
-			} catch (error) {
-				console.log(`${new Date()}: ${error}`)
-				this.status(this.STATUS_ERROR, error)
-				this.stopQueue()
-			}
-			working = false
-		}, this.config.interval)
+			await this.updatingState.runExclusive(async () => {
+				try {
+					await this.updateFromPlayer()
+					errorCount = 0
+				} catch (error) {
+					if (error === E_CANCELED) {
+						this.log('debug', `More than one attempt to update state within ${this.config.interval} milliseconds`)
+						return
+					}
 
-		this.log('debug', 'Started queue interval')
+					errorCount += 1
+					this.log('error', `${error} (${errorCount})`)
+
+					if (errorCount >= 10) {
+						this.log('error', 'Too many consecutive errors. Please check configuration.')
+						this.stopQueue()
+					}
+				}
+			})
+		}, this.config.interval)
 	}
 
 	async updateFromPlayer() {
-		try {
-			const player = await this.getPlayer()
-			this.updateVariablesFromPlayer(player)
-			return true
-		} catch (error) {
-			this.status(this.STATUS_ERROR, error)
-			this.stopQueue()
-		}
-		return false
+		const player = await this.getPlayer()
+		this.updateVariablesFromPlayer(player)
 	}
 
 	stopQueue() {
