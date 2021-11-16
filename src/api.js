@@ -60,13 +60,6 @@ module.exports = {
 		} catch (error) {
 			this.log('error', `getClips: Unable to get clips. ${error}`)
 		}
-		// [
-		//     {
-		//         "name": "Chrome Rings on Black Loop.mp4",
-		//         "uri": "/Users/johnny/Movies/Chrome Rings on Black Loop.mp4",
-		//         "length": "00:00:10:01"
-		//     },
-		// ]
 	},
 
 	async getPlayer() {
@@ -78,23 +71,6 @@ module.exports = {
 			this.log('error', `getPlayer: Unable to get player. ${error}`)
 			throw error
 		}
-		// {
-		//     "speed": 100,
-		//     "clipID": 0,
-		//     "status": "stopped",
-		//     "loop": false,
-		//     "timecode": "00:00:00:00",
-		//     "remainingtimecode": 10.04,
-		//     "preview": false,
-		//     "clips": [
-		//         {
-		//             "name": "Chrome Rings on Black Loop.mp4",
-		//             "uri": "/Users/johnny/Movies/Chrome Rings on Black Loop.mp4",
-		//             "length": "00:00:10:01"
-		//         }
-		//     ],
-		//     "ended": "stop"
-		// }
 	},
 
 	async getCurrentClip() {
@@ -103,10 +79,5 @@ module.exports = {
 		} catch (error) {
 			this.log('error', `Unable to get current clip. Error code:(${error.code}).`)
 		}
-		// {
-		//     "name": "Chrome Rings on Black Loop.mp4",
-		//     "uri": "/Users/johnny/Movies/Chrome Rings on Black Loop.mp4",
-		//     "length": "00:00:10:01"
-		// }
 	},
 }
