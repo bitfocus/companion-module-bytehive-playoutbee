@@ -68,7 +68,6 @@ class PayoutBee extends instance_skel {
 		try {
 			await this.updateFromPlayer()
 		} catch (error) {
-			this.log('error', error)
 			this.log('error', `Unable to establish connection to player via ${this.config.ip}`)
 			this.status(this.STATUS_ERROR)
 			return
