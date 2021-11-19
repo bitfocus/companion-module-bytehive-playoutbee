@@ -1,3 +1,10 @@
+## [1.0.2](https://github.com/bitfocus/companion-module-bytehive-playoutbee/compare/v1.0.1...v1.0.2) (2021-11-19)
+
+
+### Bug Fixes
+
+* **instance:** remove unnecessary log ([cf7654e](https://github.com/bitfocus/companion-module-bytehive-playoutbee/commit/cf7654ea9c804cb0aede6528a58a7fcdaee388f2))
+
 ## [1.0.1](https://github.com/bitfocus/companion-module-bytehive-playoutbee/compare/v1.0.0...v1.0.1) (2021-11-16)
 
 
