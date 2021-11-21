@@ -1,5 +1,3 @@
-const { Mutex, E_CANCELED } = require('async-mutex')
-
 const instance_skel = require('../../../instance_skel')
 
 const configs = require('./configs')
@@ -26,9 +24,10 @@ class PayoutBee extends instance_skel {
 
 		this.config = config
 
-		this.updatingState = new Mutex()
+		this.runQueue = false
 
 		this.store = {
+			version: undefined,
 			clipID: 0,
 			status: 'stopped',
 			timecode: '00:00:00:00',
@@ -36,8 +35,13 @@ class PayoutBee extends instance_skel {
 			preview: false,
 			clips: [],
 			loop: false,
-			interval: null,
 		}
+
+		this.timeout = {
+			processNext: null,
+			initRetry: null,
+		}
+
 		this.initConstants()
 
 		this.customVariables = {}
@@ -63,13 +67,33 @@ class PayoutBee extends instance_skel {
 			this.status(this.STATUS_UNKNOWN, 'Needs IP')
 			return
 		}
+
 		this.status(this.STATUS_UNKNOWN, 'Connecting...')
 
 		try {
-			await this.updateFromPlayer()
+			this.version = await this.getVersion()
+			this.debug({ version: this.version })
 		} catch (error) {
-			this.log('error', `Unable to establish connection to player via ${this.config.ip}`)
-			this.status(this.STATUS_ERROR)
+			this.status(this.STATUS_ERROR, 'Unable to connect to get player version.')
+			this.timeout.initRetry = setTimeout(() => {
+				this.connectToPlayer()
+			}, 5000)
+			return
+		}
+
+		if (!this.COMPATIBLE_VERSIONS.includes(this.version)) {
+			this.status(this.STATUS_ERROR, `Not compatible with v${this.version}`)
+			this.log('error', `Only compatible with the following versions: ${this.COMPATIBLE_VERSIONS.join(', ')}`)
+			return
+		}
+
+		try {
+			await this.processQueue(true)
+		} catch (error) {
+			this.status(this.STATUS_ERROR, 'Unable to connect to player.')
+			this.timeout.initRetry = setTimeout(() => {
+				this.connectToPlayer()
+			}, 5000)
 			return
 		}
 
@@ -80,51 +104,49 @@ class PayoutBee extends instance_skel {
 
 		this.checkFeedbacks()
 
-		this.startQueue()
+		this.runQueue = true
+		this.processQueue()
 		this.status(this.STATUS_OK)
 	}
 
-	startQueue() {
-		let errorCount = 0
+	async processQueue(init = false) {
+		this.timeout.processNext = null
 
-		if (this.store.interval) {
-			this.log('warn', 'Attempting to start queue while another already running')
-			return
+		try {
+			const player = await this.getPlayer()
+			this.updateVariablesFromPlayer(player)
+			this.status(this.STATUS_OK)
+		} catch (error) {
+			if (init) {
+				throw error
+			}
+			if (this.currentStatus !== this.STATUS_WARNING) {
+				this.status(this.STATUS_WARNING, 'Trying to connect ...')
+			}
 		}
 
-		this.store.interval = setInterval(async () => {
-			await this.updatingState.runExclusive(async () => {
-				try {
-					await this.updateFromPlayer()
-					errorCount = 0
-				} catch (error) {
-					if (error === E_CANCELED) {
-						this.log('debug', `More than one attempt to update state within ${this.config.interval} milliseconds`)
-						return
-					}
+		if (this.runQueue) {
+			this.timeout.processNext = setTimeout(() => {
+				this.processQueue()
+			}, this.config.interval)
+		}
 
-					errorCount += 1
-					this.log('error', `${error} (${errorCount})`)
-
-					if (errorCount >= 10) {
-						this.log('error', 'Too many consecutive errors. Please check configuration.')
-						this.stopQueue()
-					}
-				}
-			})
-		}, this.config.interval)
-	}
-
-	async updateFromPlayer() {
-		const player = await this.getPlayer()
-		this.updateVariablesFromPlayer(player)
+		return true
 	}
 
 	stopQueue() {
-		if (this.store.interval) {
-			clearInterval(this.store.interval)
-			this.store.interval = null
-			this.log('debug', 'Stopped queue interval')
+		this.runQueue = false
+
+		if (this.timeout.processNext) {
+			clearTimeout(this.timeout.processNext)
+			this.timeout.processNext = null
+		}
+	}
+
+	stopRetry() {
+		if (this.timeout.initRetry) {
+			clearTimeout(this.timeout.initRetry)
+			this.timeout.initRetry = null
 		}
 	}
 
@@ -140,6 +162,7 @@ class PayoutBee extends instance_skel {
 
 	destroy() {
 		this.stopQueue()
+		this.stopRetry()
 	}
 }
 

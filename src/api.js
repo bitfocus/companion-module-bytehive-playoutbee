@@ -1,4 +1,4 @@
-const needle = require('needle')
+const got = require('got')
 const POST = ['play', 'pause', 'stop', 'select', 'loop', 'next']
 const GET = ['clips', 'player', 'current']
 
@@ -13,9 +13,20 @@ module.exports = {
 
 		const url = generateUrl(this.config.ip, this.config.port, cmd, param)
 
-		const method = GET.includes(cmd) ? 'get' : POST.includes(cmd) ? 'post' : 'head'
+		const method = GET.includes(cmd) ? 'GET' : POST.includes(cmd) ? 'POST' : 'HEAD'
 
-		return needle(method, url, { open_timeout: timeout, response_timeout: timeout }).then((res) => res.body)
+		let options = { method, timeout }
+
+		if (method === 'GET') {
+			options = { ...options, responseType: 'json' }
+		}
+
+		return got(url, options).then(({ body }) => body)
+	},
+
+	getVersion() {
+		const url = `http://${this.config.ip}:${this.config.port}/version`
+		return got(url, { method: 'GET', timeout: 2000 }).then(({ body }) => body)
 	},
 
 	play() {
@@ -56,7 +67,7 @@ module.exports = {
 
 	async getClips() {
 		try {
-			return await this.sendCommand({ cmd: 'clips' }).then((res) => res.body)
+			return await this.sendCommand({ cmd: 'clips' })
 		} catch (error) {
 			this.log('error', `getClips: Unable to get clips. ${error}`)
 		}
