@@ -6,6 +6,7 @@ const constants = require('./constants')
 const presets = require('./presets')
 const variables = require('./variables')
 const feedbacks = require('./feedbacks')
+const upgrades = require('./upgrades')
 const api = require('./api')
 
 class PayoutBee extends instance_skel {
@@ -37,6 +38,15 @@ class PayoutBee extends instance_skel {
 			loop: false,
 		}
 
+		if (this.config.version >= '0.9.4') {
+			this.store = {
+				...this.store,
+				remainingtimecode: '00:00:00:00',
+				blackout: false,
+				action: 0,
+			}
+		}
+
 		this.timeout = {
 			processNext: null,
 			initRetry: null,
@@ -51,6 +61,12 @@ class PayoutBee extends instance_skel {
 			this.initActions()
 		})
 	}
+
+	static GetUpgradeScripts() {
+		return [upgrades.v094]
+	}
+
+	static DEVELOPER_forceStartupUpgradeScript = 0
 
 	init() {
 		this.connectToPlayer()
@@ -72,23 +88,12 @@ class PayoutBee extends instance_skel {
 
 		try {
 			this.version = await this.getVersion()
-			this.debug({ version: this.version })
-		} catch (error) {
-			this.status(this.STATUS_ERROR, 'Unable to connect to get player version.')
-			this.timeout.initRetry = setTimeout(() => {
-				this.connectToPlayer()
-			}, 5000)
-			return
-		}
 
-		if (!this.COMPATIBLE_VERSIONS.includes(this.version)) {
-			this.status(this.STATUS_ERROR, `Not compatible with v${this.version}`)
-			this.log('error', `Only compatible with the following versions: ${this.COMPATIBLE_VERSIONS.join(', ')}`)
-			return
-		}
-
-		try {
-			await this.processQueue(true)
+			if (!this.SUPPORTED_VERSIONS.includes(this.version)) {
+				this.status(this.STATUS_ERROR, 'Version not supported')
+				this.log('error', `Only the following versions are supported: ${this.SUPPORTED_VERSIONS.join(', ')}`)
+				return
+			}
 		} catch (error) {
 			this.status(this.STATUS_ERROR, 'Unable to connect to player.')
 			this.timeout.initRetry = setTimeout(() => {
@@ -104,12 +109,15 @@ class PayoutBee extends instance_skel {
 
 		this.checkFeedbacks()
 
-		this.runQueue = true
-		this.processQueue()
+		if (this.config.feedback) {
+			this.runQueue = true
+			this.processQueue()
+		}
+
 		this.status(this.STATUS_OK)
 	}
 
-	async processQueue(init = false) {
+	async processQueue() {
 		this.timeout.processNext = null
 
 		try {
@@ -117,9 +125,6 @@ class PayoutBee extends instance_skel {
 			this.updateVariablesFromPlayer(player)
 			this.status(this.STATUS_OK)
 		} catch (error) {
-			if (init) {
-				throw error
-			}
 			if (this.currentStatus !== this.STATUS_WARNING) {
 				this.status(this.STATUS_WARNING, 'Trying to connect ...')
 			}

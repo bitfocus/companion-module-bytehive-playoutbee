@@ -1,17 +1,21 @@
 const got = require('got')
-const POST = ['play', 'pause', 'stop', 'select', 'loop', 'next']
+const POST = ['play', 'pause', 'stop', 'select', 'loop', 'next', 'prev', 'setBlackout']
 const GET = ['clips', 'player', 'current']
 
 const generateUrl = (ip, port, cmd, param = '') => `http://${ip}:${port}/api/${cmd}/${param}`
 
 module.exports = {
+	getHost() {
+		return this.config.host === undefined ? undefined : this.config[this.config.host]
+	},
+
 	sendCommand({ cmd, param, timeout = 2000 }) {
-		if (this.config.ip === undefined) {
-			console.log('Error: Missing IP Address in instance config')
-			return Promise.reject('Error: Missing IP Address in instance config')
+		if (this.getHost() === undefined) {
+			console.log('Error: Missing IP Address or Hostname in config')
+			return Promise.reject('Error: Missing IP Address or Hostname in config')
 		}
 
-		const url = generateUrl(this.config.ip, this.config.port, cmd, param)
+		const url = generateUrl(this.getHost(), this.config.port, cmd, param)
 
 		const method = GET.includes(cmd) ? 'GET' : POST.includes(cmd) ? 'POST' : 'HEAD'
 
@@ -25,7 +29,7 @@ module.exports = {
 	},
 
 	getVersion() {
-		const url = `http://${this.config.ip}:${this.config.port}/version`
+		const url = `http://${this.getHost()}:${this.config.port}/version`
 		return got(url, { method: 'GET', timeout: 2000 }).then(({ body }) => body)
 	},
 
@@ -62,6 +66,18 @@ module.exports = {
 	next() {
 		this.sendCommand({ cmd: 'next' }).catch((error) => {
 			this.log('error', `next: Unable to move to the next clip. ${error}`)
+		})
+	},
+
+	prev() {
+		this.sendCommand({ cmd: 'prev' }).catch((error) => {
+			this.log('error', `next: Unable to move to the previous clip. ${error}`)
+		})
+	},
+
+	setBlackout(state) {
+		this.sendCommand({ cmd: 'setBlackout', param: state ? 'true' : 'false' }).catch((error) => {
+			this.log('error', `next: Unable to move to the previous clip. ${error}`)
 		})
 	},
 

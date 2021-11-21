@@ -1,3 +1,5 @@
+const { actionWhenFinishedList, choicesFromList, filterOnly } = require('./utils')
+
 module.exports = {
 	initActions() {
 		const actions = {}
@@ -22,8 +24,14 @@ module.exports = {
 			callback: () => this.next(),
 		}
 
-		actions.loop = {
-			label: 'Set Loop',
+		actions.prev = {
+			label: 'Previous',
+			only: () => this.config.version >= '0.9.4',
+			callback: () => this.prev(),
+		}
+
+		actions.setBlackout = {
+			label: 'Set Blackout When Paused',
 			options: [
 				{
 					type: 'dropdown',
@@ -32,12 +40,47 @@ module.exports = {
 					choices: [
 						{ id: 'off', label: 'Off' },
 						{ id: 'on', label: 'On' },
+						{ id: 'toogle', label: 'Toogle' }, // TODO: Waiting for blackout state
+					],
+					default: 'off',
+				},
+			],
+			only: () => this.config.version >= '0.9.4',
+			callback: ({ options }) =>
+				this.setBlackout(options.state === 'toogle' ? !this.store.blackout : options.state === 'on'),
+		}
+
+		actions.setAction = {
+			label: 'Set Action when Video is Finished',
+			options: [
+				{
+					type: 'dropdown',
+					label: 'State',
+					id: 'state',
+					choices: choicesFromList(actionWhenFinishedList),
+					default: 'off',
+				},
+			],
+			only: () => this.config.version >= '0.9.4',
+			callback: ({ options }) => this.setAction(options.state),
+		}
+
+		actions.loop = {
+			label: 'Set Loop',
+			options: [
+				{
+					type: 'dropdown',
+					label: 'State',
+					id: 'state',
+					choices: [
+						{ id: false, label: 'Off' },
+						{ id: true, label: 'On' },
 						{ id: 'toogle', label: 'Toogle' },
 					],
 					default: 'off',
 				},
 			],
-			callback: ({ options }) => this.loop(options.state === 'toogle' ? !this.store.loop : options.state === 'on'),
+			callback: ({ options }) => this.loop(options.state === 'toogle' ? !this.store.loop : options.state),
 		}
 
 		actions.select = {
@@ -86,6 +129,6 @@ module.exports = {
 			},
 		}
 
-		this.setActions(actions)
+		this.setActions(filterOnly(actions))
 	},
 }

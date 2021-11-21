@@ -1,3 +1,4 @@
+const { filterOnly } = require('./utils')
 const images = require('./images')
 
 module.exports = {
@@ -79,6 +80,26 @@ module.exports = {
 					style: { color: 16777215, bgcolor: 32768 },
 				},
 			],
+		})
+
+		presets.push({
+			category: 'Media Controls',
+			label: 'Previous Clip',
+			bank: {
+				style: 'png',
+				text: '',
+				size: 'auto',
+				alignment: 'center:center',
+				pngalignment: 'center:center',
+				color: 16777215,
+				bgcolor: 0,
+				latch: false,
+				relative_delay: false,
+				png64: images.prev,
+			},
+			actions: [{ action: 'prev', options: {} }],
+			feedbacks: [],
+			only: () => this.config.version >= '0.9.4',
 		})
 
 		presets.push({
@@ -201,6 +222,6 @@ module.exports = {
 			})
 		}
 
-		this.setPresetDefinitions(presets)
+		this.setPresetDefinitions(filterOnly(presets))
 	},
 }

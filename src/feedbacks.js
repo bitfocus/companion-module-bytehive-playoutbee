@@ -1,10 +1,7 @@
+const { actionWhenFinishedList, choicesFromList, filterOnly } = require('./utils')
+
 module.exports = {
 	initFeedbacks() {
-		/**
-		 * Replace with your feedbacks
-		 * see https://github.com/bitfocus/companion/wiki/Feedback
-		 * use this.checkFeedbacks('sampleFeedback') to recheck the specified feedback
-		 */
 		const feedbacks = {}
 
 		feedbacks.clip = {
@@ -65,15 +62,60 @@ module.exports = {
 					label: 'Loop',
 					id: 'loop',
 					choices: [
-						{ id: 0, label: 'Off' },
-						{ id: 1, label: 'On' },
+						{ id: false, label: 'Off' },
+						{ id: true, label: 'On' },
 					],
 					default: 0,
 				},
 			],
-			callback: ({ options }) => this.store.loop === Boolean(options.loop),
+			callback: ({ options }) => this.store.loop === options.loop,
 		}
 
-		this.setFeedbackDefinitions(feedbacks)
+		feedbacks.blackoutWhenPaused = {
+			type: 'boolean',
+			label: 'Blackout When Paused',
+			description: "Set Color based on the Player's Blackout Status",
+			style: {
+				color: this.rgb(255, 255, 255),
+				bgcolor: this.rgb(0, 128, 0),
+			},
+			options: [
+				{
+					type: 'dropdown',
+					label: 'Blackout',
+					id: 'blackout',
+					choices: [
+						{ id: false, label: 'Off' },
+						{ id: true, label: 'On' },
+					],
+					default: 0,
+				},
+			],
+			callback: ({ options }) => this.store.blackout === options.blackout,
+			only: () => this.config.version >= '0.9.4',
+		}
+
+		feedbacks.actionWhenFinished = {
+			type: 'boolean',
+			label: 'Action when Video is Finished',
+			description: "Set Color based on the Player's Action Status",
+			style: {
+				color: this.rgb(255, 255, 255),
+				bgcolor: this.rgb(0, 128, 0),
+			},
+			options: [
+				{
+					type: 'dropdown',
+					label: 'Action',
+					id: 'action',
+					choices: choicesFromList(actionWhenFinishedList),
+					default: 'off',
+				},
+			],
+			callback: ({ options }) => this.store.blackout === options.blackout,
+			only: () => this.config.version >= '0.9.4',
+		}
+
+		this.setFeedbackDefinitions(filterOnly(feedbacks))
 	},
 }
