@@ -1,3 +1,10 @@
+## [1.0.3](https://github.com/bitfocus/companion-module-bytehive-playoutbee/compare/v1.0.2...v1.0.3) (2021-11-21)
+
+
+### Bug Fixes
+
+* **instance:** replace http lib/fix memory leak ([c8db991](https://github.com/bitfocus/companion-module-bytehive-playoutbee/commit/c8db991e248f8d361c0e5f2bca0ac1cf817b85e7))
+
 ## [1.0.2](https://github.com/bitfocus/companion-module-bytehive-playoutbee/compare/v1.0.1...v1.0.2) (2021-11-19)
 
 
