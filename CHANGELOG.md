@@ -1,3 +1,10 @@
+# [1.1.0-beta.1](https://github.com/bitfocus/companion-module-bytehive-playoutbee/compare/v1.0.3...v1.1.0-beta.1) (2021-11-30)
+
+
+### Features
+
+* add support for PlayoutBee v0.9.4 ([9452a5f](https://github.com/bitfocus/companion-module-bytehive-playoutbee/commit/9452a5fe1aac89044f4d47b8521eed4ad2417f7a))
+
 ## [1.0.3](https://github.com/bitfocus/companion-module-bytehive-playoutbee/compare/v1.0.2...v1.0.3) (2021-11-21)
 
 
