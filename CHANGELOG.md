@@ -1,3 +1,10 @@
+## [1.0.4](https://github.com/bitfocus/companion-module-bytehive-playoutbee/compare/v1.0.3...v1.0.4) (2021-12-14)
+
+
+### Bug Fixes
+
+* **variables:** correctly remaining timecode ([277323c](https://github.com/bitfocus/companion-module-bytehive-playoutbee/commit/277323c2208235c55b8bec1a1d5d1dfd5ecb088f))
+
 ## [1.0.3](https://github.com/bitfocus/companion-module-bytehive-playoutbee/compare/v1.0.2...v1.0.3) (2021-11-21)
 
 
