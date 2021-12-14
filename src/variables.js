@@ -40,9 +40,9 @@ module.exports = {
 			updateMore: ({ value }) => {
 				let remainder = parseInt(value)
 				const ff = Math.ceil((value - Math.floor(value)) * 100)
-				const hh = parseInt(remainder / 360)
+				const hh = parseInt(remainder / 3600)
 
-				remainder = remainder % 360
+				remainder = remainder % 3600
 				const mm = parseInt(remainder / 60)
 				const ss = remainder % 60
 				return [
