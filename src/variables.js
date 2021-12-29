@@ -92,7 +92,13 @@ module.exports = {
 			{ label: 'Remaining Minutes', name: 'remaining_mm' },
 			{ label: 'Remaining Seconds', name: 'remaining_ss' },
 			{ label: 'Remaining Fraction', name: 'remaining_ff' },
-		]
+		].concat(
+			Array(this.config.maxClips)
+				.fill( { label: undefined, name: undefined } )
+				.map( (e, i) => {
+					return { label: 'Clip ' + (i + 1), name: 'clip_' + (i + 1) }
+				})
+		)
 
 		this.variableDefinitions = filterOnly(variableDefinitionsAll)
 
@@ -147,6 +153,9 @@ module.exports = {
 					this.store[key] = newValue
 					if (key === 'clips') {
 						this.updateVariable('clip_name', this.store.clips[this.store.clipID].name)
+						for (var i = 0; i < this.config.maxClips; i++) {
+							this.updateVariable('clip_' + (i+1), this.store.clips[i]?.name)
+						}
 						this.initActions()
 						this.initFeedbacks()
 					}

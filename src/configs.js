@@ -118,6 +118,16 @@ module.exports = {
 				required: true,
 				isVisible: ({ feedback, interval }) => feedback === true && interval === 0,
 			},
+			{
+				type: 'number',
+				id: 'maxClips',
+				label: 'Maximum number of clips',
+				width: 6,
+				min: 1,
+				max: 100,
+				default: 5,
+				required: true,
+			},
 		]
 	},
 }
