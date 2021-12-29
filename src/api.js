@@ -25,7 +25,7 @@ module.exports = {
 			options = { ...options, responseType: 'json' }
 		}
 
-		return got(url, options).then(({ body }) => body)
+		return got(url, options).then(({ body }) => JSON.parse(body))
 	},
 
 	getVersion() {
