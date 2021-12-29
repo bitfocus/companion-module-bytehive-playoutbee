@@ -135,9 +135,14 @@ module.exports = {
 			const newValue = player[key]
 			const variable = this.variableDefinitions.find((variable) => key === variable.storeId)
 
-			if (variable) {
+			if (variable?.storeId === 'clipID') {
+				const newValueClipID = this.getClipID(player)
 				const oldValue = this.store[variable.storeId]
-
+				if (newValueClipID !== oldValue) {
+					this.updateVariable(variable.name, newValueClipID)
+				}
+			} else if (variable) {
+				const oldValue = this.store[variable.storeId]
 				if (newValue !== oldValue) {
 					this.updateVariable(variable.name, newValue)
 				}
@@ -146,12 +151,17 @@ module.exports = {
 				if (JSON.stringify(oldValue) !== JSON.stringify(newValue)) {
 					this.store[key] = newValue
 					if (key === 'clips') {
-						this.updateVariable('clip_name', this.store.clips[this.store.clipID].name)
+						this.updateVariable('clip_name', this.store.clips[this.store.clipID - 1]?.name)
 						this.initActions()
 						this.initFeedbacks()
 					}
 				}
 			}
 		}
+	},
+
+	getClipID(player) {
+		const hasClips = (player['clips'].length > 0)
+		return hasClips ? player['clipID'] : undefined
 	},
 }
