@@ -17,7 +17,12 @@ module.exports = {
 					type: 'dropdown',
 					label: 'Clip',
 					id: 'clip',
-					choices: this.store.clips.map(({ name }, index) => ({ id: index + 1, label: `${index + 1}: ${name}` })),
+					choices: [
+						...[...Array(this.config.maxClips).keys()].map((index) => {
+							const name = this.store.clips[index]?.name || 'Clip ' + (index + 1)
+							return { id: index + 1, label: `${index + 1}: ${name}` }
+						}),
+					],
 					default: 0,
 				},
 			],
