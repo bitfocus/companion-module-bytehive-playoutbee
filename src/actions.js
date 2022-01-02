@@ -91,11 +91,8 @@ module.exports = {
 					label: 'Clip',
 					id: 'clip',
 					choices: [
+						...this.store.clips.map(({ name }, index) => ({ id: index + 1, label: `${index + 1}: ${name}` })),
 						{ id: 0, label: 'Select using custom variable' },
-						...[...Array(this.config.maxClips).keys()].map((index) => {
-							const name = this.store.clips[index]?.name || 'Clip ' + (index + 1)
-							return { id: index + 1, label: `${index + 1}: ${name}` }
-						}),
 					],
 					default: this.store.clips.length ? 1 : 0,
 				},
@@ -103,10 +100,10 @@ module.exports = {
 					type: 'dropdown',
 					label: 'Custom Variable',
 					id: 'variable',
-					choices: [
-						{ id: 0, label: 'No variable selected' },
-						...Object.keys(this.customVariables).map((name, index) => ({ id: (index + 1), label: name })),
-					],
+					choices:
+						this.customVariables.length === 0
+							? [{ id: 0, label: 'No variables defined' }]
+							: Object.keys(this.customVariables).map((name, index) => ({ id: index, label: name })),
 					default: 0,
 				},
 			],

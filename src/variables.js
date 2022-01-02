@@ -93,13 +93,13 @@ module.exports = {
 			{ label: 'Remaining Seconds', name: 'remaining_ss' },
 			{ label: 'Remaining Fraction', name: 'remaining_ff' },
 		].concat(
-			Array(this.config.maxClips)
+			Array(this.store.clips?.length || 0)
 				.fill( { label: undefined, name: undefined } )
-				.map( (e, i) => {
-					return { label: 'Clip ' + (i + 1), name: 'clip_' + (i + 1) }
+				.map( (e, index) => {
+					return { label: `Clip ${index + 1} Name`, name: `clip_${index + 1}_name` }
 				})
 		)
-
+ 
 		this.variableDefinitions = filterOnly(variableDefinitionsAll)
 
 		this.setVariableDefinitions(this.variableDefinitions)
@@ -143,7 +143,6 @@ module.exports = {
 
 			if (variable) {
 				const oldValue = this.store[variable.storeId]
-
 				if (newValue !== oldValue) {
 					this.updateVariable(variable.name, newValue)
 				}
@@ -152,10 +151,9 @@ module.exports = {
 				if (JSON.stringify(oldValue) !== JSON.stringify(newValue)) {
 					this.store[key] = newValue
 					if (key === 'clips') {
+						this.initVariables()
 						this.updateVariable('clip_name', this.store.clips[this.store.clipID].name)
-						for (var i = 0; i < this.config.maxClips; i++) {
-							this.updateVariable('clip_' + (i+1), this.store.clips[i]?.name)
-						}
+						this.store.clips.forEach((clip, index) => this.updateVariable(`clip_${index + 1}_name`, clip.name))
 						this.initActions()
 						this.initFeedbacks()
 					}

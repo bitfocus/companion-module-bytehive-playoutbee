@@ -195,7 +195,7 @@ module.exports = {
 		})
 
 		// Select Clips
-		for (let index = 1; index <= this.config.maxClips; index++) {
+		for (let index = 1; index <= 50; index++) {
 			presets.push({
 				category: 'Select Clips',
 				label: 'Select Clip',
