@@ -137,7 +137,6 @@ module.exports = {
 
 			if (variable) {
 				const oldValue = this.store[variable.storeId]
-
 				if (newValue !== oldValue) {
 					this.updateVariable(variable.name, newValue)
 				}
@@ -146,7 +145,7 @@ module.exports = {
 				if (JSON.stringify(oldValue) !== JSON.stringify(newValue)) {
 					this.store[key] = newValue
 					if (key === 'clips') {
-						this.updateVariable('clip_name', this.store.clips[this.store.clipID].name)
+						this.updateVariable('clip_name', this.store.clips[this.store.clipID - 1]?.name)
 						this.initActions()
 						this.initFeedbacks()
 					}
