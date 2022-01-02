@@ -135,13 +135,7 @@ module.exports = {
 			const newValue = player[key]
 			const variable = this.variableDefinitions.find((variable) => key === variable.storeId)
 
-			if (variable?.storeId === 'clipID') {
-				const newValueClipID = this.getClipID(player)
-				const oldValue = this.store[variable.storeId]
-				if (newValueClipID !== oldValue) {
-					this.updateVariable(variable.name, newValueClipID)
-				}
-			} else if (variable) {
+			if (variable) {
 				const oldValue = this.store[variable.storeId]
 				if (newValue !== oldValue) {
 					this.updateVariable(variable.name, newValue)
@@ -158,10 +152,5 @@ module.exports = {
 				}
 			}
 		}
-	},
-
-	getClipID(player) {
-		const hasClips = (player['clips'].length > 0)
-		return hasClips ? player['clipID'] : undefined
 	},
 }
