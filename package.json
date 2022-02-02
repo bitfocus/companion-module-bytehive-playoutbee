@@ -1,36 +1,41 @@
 {
-  "name": "bytehive-playoutbee",
-  "version": "1.0.4",
-  "description": "PlayoutBee module for Companion",
-  "manufacturer": "ByteHive",
-  "product": [
-    "PlayoutBee"
-  ],
-  "shortname": "playoutbee",
-  "main": "src/index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "prettier": "prettier",
-    "eslint": "eslint",
-    "semantic-release": "semantic-release"
-  },
-  "keywords": [
-    "keyword"
-  ],
-  "author": "Johnny Estilles <johnny@estilles.com>",
-  "license": "ISC",
-  "devDependencies": {
-    "@semantic-release/changelog": "^6.0.1",
-    "@semantic-release/git": "^10.0.1",
-    "eslint": "^8.1.0",
-    "prettier": "^2.4.1",
-    "semantic-release": "^18.0.0"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/bitfocus/companion-module-bytehive-playoutbee.git"
-  },
-  "dependencies": {
-    "got": "^11.8.3"
-  }
+	"name": "bytehive-playoutbee",
+	"version": "1.0.4",
+	"description": "PlayoutBee module for Companion",
+	"manufacturer": "ByteHive",
+	"product": [
+		"PlayoutBee"
+	],
+	"shortname": "playoutbee",
+	"main": "src/index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"prettier": "prettier",
+		"eslint": "eslint",
+		"semantic-release": "semantic-release"
+	},
+	"keywords": [
+		"keyword"
+	],
+	"author": "Johnny Estilles <johnny@estilles.com>",
+	"license": "ISC",
+	"devDependencies": {
+		"@semantic-release/changelog": "^6.0.1",
+		"@semantic-release/git": "^10.0.1",
+		"eslint": "^8.1.0",
+		"prettier": "^2.4.1",
+		"semantic-release": "^18.0.0"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/bitfocus/companion-module-bytehive-playoutbee.git"
+	},
+	"dependencies": {
+		"got": "^11.8.3"
+	},
+	"homepage": "https://github.com/bitfocus/companion-module-bytehive-playoutbee#readme",
+	"bugs": {
+		"url": "https://github.com/bitfocus/companion-module-bytehive-playoutbee/issues"
+	},
+	"api_version": "1.0.0"
 }
