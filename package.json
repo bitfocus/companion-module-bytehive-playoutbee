@@ -2,40 +2,38 @@
 	"name": "bytehive-playoutbee",
 	"version": "1.0.7",
 	"description": "PlayoutBee module for Companion",
-	"manufacturer": "ByteHive",
-	"product": [
-		"PlayoutBee"
-	],
-	"shortname": "playoutbee",
-	"main": "src/index.js",
+	"main": "dist/index.js",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"prettier": "prettier",
+		"build": "rimraf dist && yarn build:main",
+		"build:main": "tsc -p tsconfig.build.json",
 		"eslint": "eslint",
 		"semantic-release": "semantic-release"
 	},
-	"keywords": [
-		"keyword"
-	],
-	"author": "Johnny Estilles <johnny@estilles.com>",
-	"license": "ISC",
+	"author": "Jonas Dautel <jonas@bytehive.de>",
+	"license": "MIT",
 	"devDependencies": {
+		"@companion-module/tools": "^1.3.2",
 		"@semantic-release/changelog": "^6.0.1",
 		"@semantic-release/git": "^10.0.1",
+		"@types/node": "^18.11.9",
 		"eslint": "^8.1.0",
 		"prettier": "^2.4.1",
-		"semantic-release": "^18.0.0"
+		"semantic-release": "^18.0.0",
+		"typescript": "~4.9"
+	},
+	"engines": {
+		"node": "^18.12"
 	},
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/bitfocus/companion-module-bytehive-playoutbee.git"
 	},
 	"dependencies": {
-		"got": "^11.8.3"
-	},
-	"homepage": "https://github.com/bitfocus/companion-module-bytehive-playoutbee#readme",
-	"bugs": {
-		"url": "https://github.com/bitfocus/companion-module-bytehive-playoutbee/issues"
-	},
-	"api_version": "1.0.0"
+		"@companion-module/base": "~1.4.1",
+		"axios": "^1.4.0",
+		"got": "^11.8.3",
+		"socket.io-client": "^4.7.0"
+	}
 }
