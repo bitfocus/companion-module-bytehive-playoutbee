@@ -1,6 +1,6 @@
 {
 	"name": "bytehive-playoutbee",
-	"version": "1.0.7",
+	"version": "2.0.0",
 	"description": "PlayoutBee module for Companion",
 	"main": "dist/index.js",
 	"scripts": {
