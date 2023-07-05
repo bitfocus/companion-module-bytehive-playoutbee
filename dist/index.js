@@ -184,7 +184,7 @@ class PlayoutBee extends base_1.InstanceBase {
                     }],
                 defaultStyle: { color: (0, base_1.combineRgb)(255, 255, 255), bgcolor: (0, base_1.combineRgb)(0, 255, 0) },
                 callback: (feedback) => {
-                    return this.player ? this.player.currentAsset === feedback.options.clip : false;
+                    return this.player ? parseInt(this.player.currentAsset) === feedback.options.clip : false;
                 }
             },
         });

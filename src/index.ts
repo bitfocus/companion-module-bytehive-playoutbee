@@ -185,7 +185,7 @@ class PlayoutBee extends InstanceBase<PlayoutBeeConfig> {
                 defaultStyle:  {color: combineRgb(255,255,255), bgcolor: combineRgb(0,255,0)},
                 callback: (feedback) => {
                     
-                    return this.player ? this.player.currentAsset === feedback.options.clip : false
+                    return this.player ? parseInt(this.player.currentAsset) === feedback.options.clip : false
                 }
             },
 
