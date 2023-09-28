@@ -7,10 +7,10 @@ function sToTime(s) {
 exports.sToTime = sToTime;
 function msToTime(ms) {
     let fps = 30;
-    let frames = Math.round(ms / 1000 * fps) % fps;
-    let seconds = Math.round(ms / 1000) % 60;
-    let minutes = Math.round(ms / (1000 * 60)) % 60;
-    let hours = Math.round(ms / (1000 * 60 * 60)) % 24;
+    let frames = Math.floor((ms / 1000 * fps) % fps);
+    let seconds = Math.floor((ms / 1000) % 60);
+    let minutes = Math.floor((ms / (1000 * 60)) % 60);
+    let hours = Math.floor((ms / (1000 * 60 * 60)) % 24);
     let Stringhours = (hours < 10) ? "0" + hours : hours;
     let Stringminutes = (minutes < 10) ? "0" + minutes : minutes;
     let Stringseconds = (seconds < 10) ? "0" + seconds : seconds;

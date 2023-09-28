@@ -51,6 +51,15 @@ class PlayoutBee extends base_1.InstanceBase {
         this.
             updateStatus(base_1.InstanceStatus.Connecting, "connecting");
     }
+    remainingtimecode() {
+        if (this.player.assets != undefined && this.player.assets.length != 0) {
+            let currentAsset = this.player.assets[this.player.currentAsset];
+            return (currentAsset.outPoint - (this.player.timecode + currentAsset.inPoint)) >= 0 ? (currentAsset.outPoint - (this.player.timecode + currentAsset.inPoint)) : 0;
+        }
+        else {
+            return (0);
+        }
+    }
     updateActions() {
         this.setActionDefinitions({
             "play": {
@@ -91,16 +100,15 @@ class PlayoutBee extends base_1.InstanceBase {
             "select": {
                 name: "Select Clip",
                 options: [{
-                        type: "number",
+                        type: "textinput",
                         id: "clip",
                         label: "Clip ID",
-                        default: 0,
+                        default: "0",
                         required: true,
-                        min: 0,
-                        max: 9999,
                     }],
-                callback: (action) => {
-                    this.callAPI("/api/select/" + action.options.clip);
+                callback: async (action) => {
+                    var id = await this.parseVariablesInString(action.options.clip?.toString() || "0");
+                    this.callAPI("/api/select/" + id);
                 }
             },
             "goto": {
@@ -135,6 +143,74 @@ class PlayoutBee extends base_1.InstanceBase {
                     this.callAPI("/api/last/" + action.options.time);
                 }
             },
+            "setAction": {
+                name: "Set Action of Asset",
+                description: "Set the action of the Asset",
+                options: [{
+                        type: "textinput",
+                        id: "clip",
+                        label: "Clip",
+                        default: "0",
+                        regex: "/(current)*\d*(next)*(prev)*/g",
+                        required: true,
+                    },
+                    {
+                        type: "dropdown",
+                        id: "action",
+                        label: "Action",
+                        default: "true",
+                        choices: [{ id: "0", label: "pause" }, { id: "1", label: "playNext" }, { id: "2", label: "next" }, { id: "3", label: "loop" }, { id: "4", label: "reset" }],
+                    }
+                ],
+                callback: async (action) => {
+                    this.callAPI("/api/asset/" + action.options.clip + "/action/" + action.options.action);
+                }
+            },
+            "rotate": {
+                name: "Set Rotation of Asset",
+                description: "Set the Rotation of the Asset",
+                options: [{
+                        type: "textinput",
+                        id: "clip",
+                        label: "Clip",
+                        default: "0",
+                        regex: "/(current)*\d*(next)*(prev)*/g",
+                        required: true,
+                    },
+                    {
+                        type: "dropdown",
+                        id: "rotation",
+                        label: "Rotation",
+                        default: "0",
+                        choices: [{ id: "0", label: "0" }, { id: "90", label: "90" }, { id: "180", label: "180" }, { id: "270", label: "270" }, { id: "360", label: "360" }],
+                    }
+                ],
+                callback: async (action) => {
+                    this.callAPI("/api/asset/" + action.options.clip + "/rotate/" + action.options.rotation);
+                }
+            },
+            "volume": {
+                name: "Set Volume of Asset",
+                description: "Set the Rotation of the Asset",
+                options: [{
+                        type: "textinput",
+                        id: "clip",
+                        label: "Clip",
+                        default: "0",
+                        regex: "/(current)*\d*(next)*(prev)*/g",
+                        required: true,
+                    },
+                    {
+                        type: "textinput",
+                        id: "volume",
+                        label: "Volume",
+                        default: "0",
+                    }
+                ],
+                callback: async (action) => {
+                    this.callAPI("/api/asset/" + action.options.clip + "/volume/" + action.options.volume);
+                }
+            }
         });
     }
     updateFeedbacks() {
@@ -187,6 +263,29 @@ class PlayoutBee extends base_1.InstanceBase {
                     return this.player ? parseInt(this.player.currentAsset) === feedback.options.clip : false;
                 }
             },
+            "ClipAction": {
+                type: "boolean",
+                name: "Action of Clip",
+                description: "If the selected clip is the one specified",
+                options: [{
+                        type: "textinput",
+                        id: "assetID",
+                        label: "Asset ID",
+                        default: "0",
+                        required: true,
+                    }, {
+                        type: "dropdown",
+                        id: "action",
+                        label: "Action",
+                        default: "true",
+                        choices: [{ id: "0", label: "pause" }, { id: "1", label: "playNext" }, { id: "2", label: "next" }, { id: "3", label: "loop" }, { id: "4", label: "reset" }],
+                    }],
+                defaultStyle: { color: (0, base_1.combineRgb)(255, 255, 255), bgcolor: (0, base_1.combineRgb)(0, 255, 0) },
+                callback: (feedback) => {
+                    let id = feedback.options.assetID;
+                    return this.player ? this.player.assets[id].action === feedback.options.action : false;
+                }
+            }
         });
     }
     updateVariables() {
@@ -239,6 +338,32 @@ class PlayoutBee extends base_1.InstanceBase {
                 label: "Milisecond of the timecode",
                 name: "milisecond"
             });
+            variables.push({
+                variableId: "remainingTimecode",
+                label: "Timecode",
+                name: "remainingTimecode"
+            });
+            variables.push({
+                variableId: "remainingTimecode_hh",
+                label: "Hour of the timecode",
+                name: "remainingHour"
+            });
+            variables.push({
+                variableId: "remainingTimecode_mm",
+                label: "Minute of the timecode",
+                name: "remainingMinute"
+            });
+            variables.push({
+                variableId: "remainingTimecode_ss",
+                label: "Second of the timecode",
+                name: "remainingSecond"
+            });
+            variables.push({
+                variableId: "remainingTimecode_ms",
+                label: "Milisecond of the timecode",
+                name: "remainingMilisecond"
+            });
+            console.log("variables");
             this.setVariableDefinitions(variables);
             let values = {};
             for (let i = 0; i < this.player.assets.length; i++) {
@@ -252,6 +377,7 @@ class PlayoutBee extends base_1.InstanceBase {
         }
     }
     updateTimecode(timecode) {
+        this.player.timecode = timecode;
         let values = {};
         //get the timecode and split it into hours, minutes, seconds and frames
         let calcs = (0, util_1.sToTime)(timecode);
@@ -260,13 +386,22 @@ class PlayoutBee extends base_1.InstanceBase {
         values["timecode_mm"] = calcs.minutes;
         values["timecode_ss"] = calcs.seconds;
         values["timecode_ms"] = calcs.frames;
+        //get the remaining timecode and split it into hours, minutes, seconds and frames
+        calcs = (0, util_1.sToTime)(this.remainingtimecode());
+        values["remainingTimecode"] = calcs.timecode;
+        values["remainingTimecode_hh"] = calcs.hours;
+        values["remainingTimecode_mm"] = calcs.minutes;
+        values["remainingTimecode_ss"] = calcs.seconds;
+        values["remainingTimecode_ms"] = calcs.frames;
         this.setVariableValues(values);
     }
     callAPI(url) {
+        console.log("callAPI", url);
         axios_1.default.get("http://" + this.config.host + ":" + this.config.port + url).then((res) => {
             this.log("info", res.data);
         }).catch((err) => {
             this.log("error", err);
+            console.log(err);
         });
     }
     updatePresets() {

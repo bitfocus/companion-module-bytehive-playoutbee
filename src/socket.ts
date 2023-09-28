@@ -18,7 +18,7 @@ export class SocketAPI extends EventEmitter{
     })
     this.io.on("update",(player:any)=>{
         this.PlayoutBee.player = player;
-        this.PlayoutBee.checkFeedbacks("selectedClip","stopped","paused","playing");
+        this.PlayoutBee.checkFeedbacks("selectedClip","stopped","paused","playing","ClipAction");
         this.PlayoutBee.updateVariables();
     })
     this.io.on("updateTimecode",(timecode:any)=>{

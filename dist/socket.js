@@ -23,7 +23,7 @@ class SocketAPI extends events_1.default {
         });
         this.io.on("update", (player) => {
             this.PlayoutBee.player = player;
-            this.PlayoutBee.checkFeedbacks("selectedClip", "stopped", "paused", "playing");
+            this.PlayoutBee.checkFeedbacks("selectedClip", "stopped", "paused", "playing", "ClipAction");
             this.PlayoutBee.updateVariables();
         });
         this.io.on("updateTimecode", (timecode) => {
