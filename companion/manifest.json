@@ -4,7 +4,7 @@
 	"shortname": "playoutbee",
 	"description": "PlayoutBee module for Companion",
 	"version": "0.0.0",
-	"license": "ISC",
+	"license": "MIT",
 	"repository": "git+https://github.com/bitfocus/companion-module-bytehive-playoutbee.git",
 	"bugs": "https://github.com/bitfocus/companion-module-bytehive-playoutbee/issues",
 	"maintainers": [
