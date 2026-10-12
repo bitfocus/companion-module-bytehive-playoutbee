@@ -8,7 +8,6 @@ The module provides the ability to configure thae following options:
 
 1. **PlayoutBee IP** - The IP Address if the device running PlayoutBee
 2. **PlayoutBee REST Port** - The TCP port number on which PlayoutBee listens for RESTful API commands (at the moment, PlayoutBee only uses port 3000)
-3. **Polling Interval in Milliseconds** - The number of milliseconds the module waits between API calls to Playout Bee (defaults to 100ms, but you can increase up to 1000ms)
 
 ### Actions
 
